@@ -1,0 +1,8 @@
+uvicorn[standard]
+faststream[redis,cli]==0.5.28
+redis==5.0.1
+pydantic==2.5.3
+python-dateutil==2.8.2
+aioredis==2.0.1
+python-dotenv==1.0.0
+uvloop

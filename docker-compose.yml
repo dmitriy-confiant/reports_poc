@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  flask-app:
+    build: ./flask-app
+    ports:
+      - "5000:5000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./flask-app:/app
+    command: python app.py
+
+  reports-service:
+    build: ./reports-service
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      flask-app:
+        condition: service_started
+    volumes:
+      - ./reports-service:/app
+    command: faststream run service:app --workers 4
+
+volumes:
+  redis_data:
